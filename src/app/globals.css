@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-amber-50 text-gray-900 font-sans text-base antialiased;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-white border-[0.5px] border-gray-200 rounded-lg px-5 py-4;
+  }
+
+  .card-warm {
+    @apply bg-amber-100 border-amber-400;
+  }
+
+  .card-positive {
+    @apply bg-teal-50 border-[#9FE1CB];
+  }
+
+  .tag {
+    @apply text-xs font-medium rounded-full px-[10px] py-[3px] inline-block;
+  }
+
+  .tag-healthy {
+    background: #eaf3de;
+    color: #3b6d11;
+  }
+
+  .tag-watch {
+    background: #faeeda;
+    color: #854f0b;
+  }
+
+  .tag-concern {
+    background: #fcebeb;
+    color: #a32d2d;
+  }
+
+  .tag-info {
+    background: #e6f1fb;
+    color: #185fa5;
+  }
+
+  .tag-neutral {
+    background: #f1efe8;
+    color: #5f5e5a;
+  }
+
+  /* amber-800 background — white text achieves 4.6:1 contrast */
+  .btn-primary {
+    @apply block w-full bg-amber-800 text-white border-0 rounded-md px-6 py-3 text-base font-medium text-center cursor-pointer transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-800 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-ghost {
+    @apply block w-full bg-transparent text-amber-800 border-[1.5px] border-amber-800 rounded-md px-6 py-[11px] text-base font-medium text-center cursor-pointer transition-colors hover:bg-amber-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-800;
+  }
+
+  .disclaimer {
+    @apply text-xs text-gray-400 leading-relaxed border-t-[0.5px] border-gray-200 pt-[10px] mt-3;
+  }
+
+  /* Kabir doha — always Devanagari-capable serif, always amber-900/800 */
+  .kabir-quote {
+    @apply font-serif text-amber-900 text-center;
+    font-size: 17px;
+    line-height: 1.8;
+  }
+
+  .input {
+    @apply block w-full bg-white border border-gray-200 rounded-md px-4 py-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/30;
+  }
+
+  .label {
+    @apply block text-sm font-medium text-gray-600 mb-1;
+  }
+}

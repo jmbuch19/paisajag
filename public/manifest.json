@@ -1,0 +1,13 @@
+{
+  "name": "PaisaJaag",
+  "short_name": "PaisaJaag",
+  "description": "Jag Paisa. Bhag Paisa.",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#FFFBF5",
+  "theme_color": "#C97B2A",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
