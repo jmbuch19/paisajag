@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { PublicPageShell } from '@/components/PublicPageShell'
 import { LEGAL_DOCUMENT_VERSION } from '@/lib/constants'
 
-export const metadata: Metadata = { title: 'Privacy Policy — PaisaJaag' }
+export const metadata: Metadata = { title: 'Privacy Policy — PaisaJag' }
 
 export default function PrivacyPage() {
   return (
@@ -14,7 +14,7 @@ export default function PrivacyPage() {
         Your name, phone number, the financial profile you share during
         onboarding (age, income range, life stage, risk temperament), and the
         investments, liabilities and goals you enter. We collect nothing from
-        your bank, broker or AMC — everything in PaisaJaag is what you chose to
+        your bank, broker or AMC — everything in PaisaJag is what you chose to
         tell us.
       </p>
 

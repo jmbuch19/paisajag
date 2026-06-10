@@ -27,14 +27,14 @@ const notoDevanagari = Noto_Serif_Devanagari({
 })
 
 export const metadata: Metadata = {
-  title: 'PaisaJaag — Jag Paisa. Bhag Paisa.',
+  title: 'PaisaJag — Jag Paisa. Bhag Paisa.',
   description:
-    'Wake up your money. PaisaJaag helps Indian families see, understand and simulate their investments — information, never advice.',
+    'Wake up your money. PaisaJag helps Indian families see, understand and simulate their investments — information, never advice.',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'PaisaJaag',
+    title: 'PaisaJag',
   },
 }
 

@@ -4,7 +4,7 @@ import { EmptyState } from '@/components/EmptyState'
 import { rupees, rupeesShort, percent } from '@/lib/format'
 import { mockLiabilities, totalLiabilities } from '@/lib/mock-data'
 
-export const metadata = { title: 'Liabilities — PaisaJaag' }
+export const metadata = { title: 'Liabilities — PaisaJag' }
 
 const TYPE_LABEL: Record<string, string> = {
   home_loan: 'Home loan',

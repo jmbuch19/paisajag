@@ -1,6 +1,6 @@
 import { mockAdminMetrics as m } from '@/lib/mock-data'
 
-export const metadata = { title: 'Costs — PaisaJaag Admin' }
+export const metadata = { title: 'Costs — PaisaJag Admin' }
 
 export default function AdminCostsPage() {
   const rows = [

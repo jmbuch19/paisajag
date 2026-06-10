@@ -4,7 +4,7 @@ import { EmptyState } from '@/components/EmptyState'
 import { rupeesShort, percent } from '@/lib/format'
 import { mockGoals } from '@/lib/mock-data'
 
-export const metadata = { title: 'Goals — PaisaJaag' }
+export const metadata = { title: 'Goals — PaisaJag' }
 
 export default function GoalsPage() {
   const goals = mockGoals

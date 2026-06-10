@@ -1,14 +1,14 @@
 import type { Metadata } from 'next'
 import { PublicPageShell } from '@/components/PublicPageShell'
 
-export const metadata: Metadata = { title: 'About — PaisaJaag' }
+export const metadata: Metadata = { title: 'About — PaisaJag' }
 
 export default function AboutPage() {
   return (
-    <PublicPageShell title="What PaisaJaag is — and is not">
+    <PublicPageShell title="What PaisaJag is — and is not">
       <h2 className="text-lg font-medium text-gray-900">What we are</h2>
       <p>
-        PaisaJaag is a personal finance awareness platform for Indian families.
+        PaisaJag is a personal finance awareness platform for Indian families.
         We bring your mutual funds, deposits and loans into one calm picture,
         explain overnight market news in plain language, and let you simulate
         any financial decision before you make it.
@@ -30,7 +30,7 @@ export default function AboutPage() {
       </p>
       <p>
         We are not a trading app. There are no buy buttons here, no urgency, no
-        notifications engineered to make you act. PaisaJaag is built to make
+        notifications engineered to make you act. PaisaJag is built to make
         you calmer about money, not busier with it.
       </p>
 

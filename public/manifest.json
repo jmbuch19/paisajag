@@ -1,6 +1,6 @@
 {
-  "name": "PaisaJaag",
-  "short_name": "PaisaJaag",
+  "name": "PaisaJag",
+  "short_name": "PaisaJag",
   "description": "Jag Paisa. Bhag Paisa.",
   "start_url": "/dashboard",
   "display": "standalone",

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { PublicPageShell } from '@/components/PublicPageShell'
 
-export const metadata: Metadata = { title: 'Data Deletion — PaisaJaag' }
+export const metadata: Metadata = { title: 'Data Deletion — PaisaJag' }
 
 export default function DataDeletionPage() {
   return (
@@ -29,10 +29,10 @@ export default function DataDeletionPage() {
         If you can no longer access your account, send a WhatsApp message from
         your registered number to our support number, or email{' '}
         <a
-          href="mailto:privacy@paisajaag.in"
+          href="mailto:privacy@paisajag.in"
           className="text-amber-800 underline"
         >
-          privacy@paisajaag.in
+          privacy@paisajag.in
         </a>{' '}
         with the subject “Delete my data”. The same 30-day timeline applies.
       </p>

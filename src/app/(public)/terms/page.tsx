@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { PublicPageShell } from '@/components/PublicPageShell'
 import { LEGAL_DOCUMENT_VERSION } from '@/lib/constants'
 
-export const metadata: Metadata = { title: 'Terms of Service — PaisaJaag' }
+export const metadata: Metadata = { title: 'Terms of Service — PaisaJag' }
 
 export default function TermsPage() {
   return (
@@ -11,7 +11,7 @@ export default function TermsPage() {
 
       <h2 className="text-lg font-medium text-gray-900">The service</h2>
       <p>
-        PaisaJaag provides financial information, awareness briefs and
+        PaisaJag provides financial information, awareness briefs and
         simulation tools. It does not provide investment advice, portfolio
         management or execution services. Use of the platform requires
         acknowledging the disclaimer during onboarding.
@@ -35,7 +35,7 @@ export default function TermsPage() {
       <h2 className="text-lg font-medium text-gray-900">Limitations</h2>
       <p>
         Market data, NAVs and news summaries come from third-party sources and
-        may be delayed or contain errors. PaisaJaag is not liable for losses
+        may be delayed or contain errors. PaisaJag is not liable for losses
         arising from decisions made using information on the platform.
       </p>
 

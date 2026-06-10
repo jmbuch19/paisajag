@@ -1,8 +1,8 @@
 {
-  "name": "paisajaag",
+  "name": "paisajag",
   "version": "0.1.0",
   "private": true,
-  "description": "PaisaJaag — Jag Paisa. Bhag Paisa. Personal finance awareness platform for Indian families.",
+  "description": "PaisaJag — Jag Paisa. Bhag Paisa. Personal finance awareness platform for Indian families.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

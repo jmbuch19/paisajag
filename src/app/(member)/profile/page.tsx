@@ -4,7 +4,7 @@ import { TopBar } from '@/components/TopBar'
 import { Tag } from '@/components/Tag'
 import { mockMember } from '@/lib/mock-data'
 
-export const metadata = { title: 'Profile — PaisaJaag' }
+export const metadata = { title: 'Profile — PaisaJag' }
 
 const LIFE_STAGE_LABEL: Record<string, string> = {
   early_career: 'Early career',

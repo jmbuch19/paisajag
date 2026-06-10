@@ -1,6 +1,6 @@
 import { mockAdminMetrics as m } from '@/lib/mock-data'
 
-export const metadata = { title: 'Admin — PaisaJaag' }
+export const metadata = { title: 'Admin — PaisaJag' }
 
 function Stat({ label, value }: { label: string; value: string | number }) {
   return (

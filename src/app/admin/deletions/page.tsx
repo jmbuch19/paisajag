@@ -1,4 +1,4 @@
-export const metadata = { title: 'Deletions — PaisaJaag Admin' }
+export const metadata = { title: 'Deletions — PaisaJag Admin' }
 
 // TODO(backend): GET /api/admin/deletions
 export default function AdminDeletionsPage() {

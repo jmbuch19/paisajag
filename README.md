@@ -1,4 +1,4 @@
-# PaisaJaag
+# PaisaJag
 
 > Jag Paisa. Bhag Paisa. — Wake up your money.
 
@@ -33,8 +33,9 @@ calls (grep for `TODO(backend)`).
 - ⏳ Backend — API routes, Supabase migrations, crons (in progress, separate)
 - ⏳ WhatsApp templates — pending Meta approval
 - ⏳ Legal copy — pending CA review (placeholders marked in-page)
-- ⏳ PWA icons — `public/icon-*.png` are generated placeholders; replace with
-  real brand marks before launch
+- ✅ Brand — icons generated from the real logo mark (`public/logo.png` is
+  the full lockup). Spelling is **PaisaJag** / paisajag.in — the docs'
+  "PaisaJaag" spelling is outdated
 
 ## Rules that are easy to forget
 

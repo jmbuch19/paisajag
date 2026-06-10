@@ -1,6 +1,6 @@
 import { mockAdminMetrics as m } from '@/lib/mock-data'
 
-export const metadata = { title: 'Nudges — PaisaJaag Admin' }
+export const metadata = { title: 'Nudges — PaisaJag Admin' }
 
 export default function AdminNudgesPage() {
   const deliveryRate = (

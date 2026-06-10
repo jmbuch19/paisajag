@@ -1,6 +1,6 @@
 import { LEGAL_DOCUMENT_VERSION } from '@/lib/constants'
 
-export const metadata = { title: 'Legal Log — PaisaJaag Admin' }
+export const metadata = { title: 'Legal Log — PaisaJag Admin' }
 
 // TODO(backend): read legal_acknowledgements via service role
 const PREVIEW_LOG = [

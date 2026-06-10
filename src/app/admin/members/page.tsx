@@ -1,4 +1,4 @@
-export const metadata = { title: 'Members — PaisaJaag Admin' }
+export const metadata = { title: 'Members — PaisaJag Admin' }
 
 // TODO(backend): GET /api/admin/members (names, status, onboarding % —
 // no financial data, ever)

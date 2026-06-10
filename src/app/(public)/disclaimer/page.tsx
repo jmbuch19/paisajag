@@ -2,14 +2,14 @@ import type { Metadata } from 'next'
 import { PublicPageShell } from '@/components/PublicPageShell'
 import { LEGAL_DOCUMENT_VERSION } from '@/lib/constants'
 
-export const metadata: Metadata = { title: 'Disclaimer — PaisaJaag' }
+export const metadata: Metadata = { title: 'Disclaimer — PaisaJag' }
 
 export default function DisclaimerPage() {
   return (
     <PublicPageShell title="Disclaimer">
       <p className="text-xs text-gray-400">Version {LEGAL_DOCUMENT_VERSION}</p>
       <p>
-        PaisaJaag is an information and awareness platform. PaisaJaag is{' '}
+        PaisaJag is an information and awareness platform. PaisaJag is{' '}
         <strong className="font-medium text-gray-900">
           not a SEBI registered investment advisor
         </strong>{' '}
@@ -34,7 +34,7 @@ export default function DisclaimerPage() {
       <p>
         Before making any investment decision, consider consulting a SEBI
         registered investment advisor. Every decision you make is yours alone,
-        and PaisaJaag accepts no liability for decisions made on the basis of
+        and PaisaJag accepts no liability for decisions made on the basis of
         information shown on this platform.
       </p>
       <p className="text-sm text-gray-400">

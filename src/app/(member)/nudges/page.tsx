@@ -3,7 +3,7 @@ import { TopBar } from '@/components/TopBar'
 import { EmptyState } from '@/components/EmptyState'
 import { mockNudges } from '@/lib/mock-data'
 
-export const metadata = { title: 'Nudge History — PaisaJaag' }
+export const metadata = { title: 'Nudge History — PaisaJag' }
 
 const NUDGE_META = {
   morning_brief: { icon: Sunrise, label: 'Morning brief' },

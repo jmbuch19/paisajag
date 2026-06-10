@@ -10,7 +10,7 @@ const PERSONAS = [
   },
   {
     title: 'Parents',
-    text: 'You built the savings. PaisaJaag helps you see them clearly — in plain language, at your pace, with no one rushing you.',
+    text: 'You built the savings. PaisaJag helps you see them clearly — in plain language, at your pace, with no one rushing you.',
   },
   {
     title: 'Retirees',
@@ -27,7 +27,7 @@ const EVENING_TIMELINE = [
   { time: '8:00pm', event: 'Business channels debate it loudly.' },
   {
     time: '8:15pm',
-    event: 'PaisaJaag sends you a calm note: what happened, your exposure, no panic.',
+    event: 'PaisaJag sends you a calm note: what happened, your exposure, no panic.',
   },
   {
     time: '9:15am',
@@ -51,7 +51,7 @@ export default function LandingPage() {
           <KabirQuote />
           <p className="text-lg text-gray-900">Your money is awake. Are you?</p>
           <p className="text-gray-600">
-            PaisaJaag watches over your family’s investments and tells you, in
+            PaisaJag watches over your family’s investments and tells you, in
             plain language, what is happening and what it means for you. We
             show you the picture — the decisions are always yours.
           </p>

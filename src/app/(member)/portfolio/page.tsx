@@ -6,7 +6,7 @@ import { EmptyState } from '@/components/EmptyState'
 import { rupees, rupeesShort, percent } from '@/lib/format'
 import { mockInvestments, totalAssets } from '@/lib/mock-data'
 
-export const metadata = { title: 'Portfolio — PaisaJaag' }
+export const metadata = { title: 'Portfolio — PaisaJag' }
 
 export default function PortfolioPage() {
   const investments = mockInvestments

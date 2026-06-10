@@ -1,6 +1,6 @@
-export const PLATFORM_NAME = 'PaisaJaag'
+export const PLATFORM_NAME = 'PaisaJag'
 export const TAGLINE = 'Jag Paisa. Bhag Paisa.'
-export const DOMAIN = 'paisajaag.in'
+export const DOMAIN = 'paisajag.in'
 
 // Founding quote — landing hero and footer. Never remove (DESIGN.md).
 export const KABIR_DOHA_HINDI = 'जो सोवत है सो खोवत है\nजो जागत है सोई पावत है'
@@ -11,7 +11,7 @@ export const KABIR_DOHA_ENGLISH =
 // Option A — pure information platform. Shown after simulations,
 // nudges and chat responses; footer carries the short form.
 export const STANDARD_DISCLAIMER =
-  'PaisaJaag is an information platform, not a SEBI registered investment advisor. ' +
+  'PaisaJag is an information platform, not a SEBI registered investment advisor. ' +
   'Nothing here is investment advice. Mutual fund investments are subject to market risks. ' +
   'Read all scheme related documents carefully. All decisions are yours alone.'
 
