@@ -1,13 +1,20 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { PLATFORM_NAME, STANDARD_DISCLAIMER } from '@/lib/constants'
+import { getSupabaseBrowser } from '@/lib/supabase/client'
+import { dnaToProfileRow } from '@/lib/dna'
+import {
+  LEGAL_DOCUMENT_VERSION,
+  PLATFORM_NAME,
+  STANDARD_DISCLAIMER,
+} from '@/lib/constants'
 
 // Onboarding — SPEC.md Flow 1.
-// Step 0: disclaimer acknowledgement (must scroll + confirm)
-// Steps 1–5: Financial DNA wizard (a conversation, not a form)
-// Persistence: TODO(backend) — POST profile + acknowledgement on finish.
+// Step 0: disclaimer acknowledgement (must scroll + confirm) — recorded in
+// legal_acknowledgements at the moment of acceptance.
+// Steps 1–5: Financial DNA wizard (a conversation, not a form) — upserted
+// into profiles on finish; life_stage/risk_profile computed by DB trigger.
 
 type DNA = Record<string, string>
 
@@ -206,11 +213,31 @@ const STEPS: StepDef[] = [
 
 export default function OnboardingPage() {
   const router = useRouter()
+  const supabase = getSupabaseBrowser()
   // step -1 = disclaimer acknowledgement, 0..4 = DNA steps, 5 = done
   const [step, setStep] = useState(-1)
   const [dna, setDna] = useState<DNA>({})
+  const [fullName, setFullName] = useState('')
+  const [userId, setUserId] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [scrolledToEnd, setScrolledToEnd] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!supabase) return
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) {
+        router.replace('/login')
+        return
+      }
+      setUserId(user.id)
+      // Google users arrive with a name; phone-OTP users type theirs.
+      const metaName = user.user_metadata?.full_name
+      if (typeof metaName === 'string') setFullName(metaName)
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   function onDisclaimerScroll() {
     const el = scrollRef.current
@@ -220,9 +247,38 @@ export default function OnboardingPage() {
     }
   }
 
-  function finish() {
-    // TODO(backend): persist DNA profile + legal acknowledgement,
-    // then continue to portfolio entry. Preview goes to dashboard.
+  async function acceptDisclaimer() {
+    setError(null)
+    if (supabase && userId) {
+      const { error } = await supabase.from('legal_acknowledgements').insert({
+        user_id: userId,
+        document_version: LEGAL_DOCUMENT_VERSION,
+        user_agent: navigator.userAgent,
+      })
+      if (error) {
+        setError('We couldn’t record your acknowledgement. Please try again.')
+        return
+      }
+    }
+    setStep(0)
+  }
+
+  async function finish() {
+    setError(null)
+    if (!supabase || !userId) {
+      // Preview mode — no backend configured.
+      router.push('/dashboard')
+      return
+    }
+    setBusy(true)
+    const { error } = await supabase
+      .from('profiles')
+      .upsert(dnaToProfileRow(dna, userId, fullName), { onConflict: 'user_id' })
+    setBusy(false)
+    if (error) {
+      setError('We couldn’t save your profile. Please try again in a moment.')
+      return
+    }
     router.push('/dashboard')
   }
 
@@ -262,12 +318,17 @@ export default function OnboardingPage() {
           <button
             className="btn-primary mt-6"
             disabled={!scrolledToEnd}
-            onClick={() => setStep(0)}
+            onClick={acceptDisclaimer}
           >
             {scrolledToEnd
               ? 'I understand — information, not advice'
               : 'Please scroll to the end to continue'}
           </button>
+          {error && (
+            <p role="alert" className="mt-3 text-sm text-red-600">
+              {error}
+            </p>
+          )}
         </div>
       </main>
     )
@@ -287,16 +348,23 @@ export default function OnboardingPage() {
           dashboard will fill in as you go.
         </p>
         <div className="mt-8 w-full max-w-sm">
-          <button className="btn-primary" onClick={finish}>
-            See my dashboard
+          <button className="btn-primary" onClick={finish} disabled={busy}>
+            {busy ? 'Saving…' : 'See my dashboard'}
           </button>
+          {error && (
+            <p role="alert" className="mt-3 text-sm text-red-600">
+              {error}
+            </p>
+          )}
         </div>
       </main>
     )
   }
 
   const current = STEPS[step]
-  const answered = current.questions.every((q) => dna[q.key])
+  const answered =
+    current.questions.every((q) => dna[q.key]) &&
+    (step !== 0 || fullName.trim().length > 0)
 
   return (
     <main className="flex min-h-screen flex-col bg-amber-50 px-6 py-10">
@@ -320,6 +388,22 @@ export default function OnboardingPage() {
         <p className="mt-1 text-sm text-gray-600">{current.intro}</p>
 
         <div className="mt-6 space-y-6">
+          {step === 0 && (
+            <div>
+              <label htmlFor="full-name" className="label">
+                What should we call you?
+              </label>
+              <input
+                id="full-name"
+                type="text"
+                autoComplete="name"
+                className="input"
+                placeholder="Your name"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+              />
+            </div>
+          )}
           {current.questions.map((q) => (
             <fieldset key={q.key}>
               <legend className="label">{q.prompt}</legend>
