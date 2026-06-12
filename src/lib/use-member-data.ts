@@ -24,9 +24,10 @@ export interface MemberData {
   investments: Investment[]
   liabilities: Liability[]
   goals: Goal[]
+  refresh: () => void
 }
 
-const PREVIEW: MemberData = {
+const PREVIEW: Omit<MemberData, 'refresh'> = {
   loading: false,
   live: false,
   member: { fullName: mockMember.fullName, dnaComplete: mockMember.dnaComplete },
@@ -37,7 +38,8 @@ const PREVIEW: MemberData = {
 
 export function useMemberData(): MemberData {
   const supabase = getSupabaseBrowser()
-  const [data, setData] = useState<MemberData>(
+  const [version, setVersion] = useState(0)
+  const [data, setData] = useState<Omit<MemberData, 'refresh'>>(
     supabase ? { ...PREVIEW, loading: true, live: true, investments: [], liabilities: [], goals: [], member: { fullName: '', dnaComplete: false } } : PREVIEW,
   )
 
@@ -116,7 +118,7 @@ export function useMemberData(): MemberData {
       cancelled = true
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [version])
 
-  return data
+  return { ...data, refresh: () => setVersion((v) => v + 1) }
 }
