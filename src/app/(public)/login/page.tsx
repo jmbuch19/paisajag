@@ -9,6 +9,10 @@ import { PLATFORM_NAME, TAGLINE, SHORT_DISCLAIMER } from '@/lib/constants'
 
 type Step = 'phone' | 'otp'
 
+// Flip to true once the PaisaJag WABA is verified and the Supabase
+// phone provider + WhatsApp delivery hook are configured.
+const WHATSAPP_LOGIN_ENABLED = false
+
 export default function LoginPage() {
   const router = useRouter()
   const supabase = getSupabaseBrowser()
@@ -104,49 +108,60 @@ export default function LoginPage() {
               <div>
                 <h1 className="text-lg font-medium text-gray-900">Welcome</h1>
                 <p className="mt-1 text-sm text-gray-600">
-                  We’ll send a 6-digit code to your WhatsApp. No passwords,
-                  ever.
+                  Sign in with Google to get started. No passwords, ever.
                 </p>
               </div>
-              <div>
-                <label htmlFor="phone" className="label">
-                  Mobile number
-                </label>
-                <div className="flex gap-2">
-                  <span className="flex items-center rounded-md border border-gray-200 bg-gray-50 px-3 text-gray-600">
-                    +91
-                  </span>
-                  <input
-                    id="phone"
-                    type="tel"
-                    inputMode="numeric"
-                    autoComplete="tel-national"
-                    maxLength={10}
-                    className="input"
-                    placeholder="98765 43210"
-                    value={phone}
-                    onChange={(e) =>
-                      setPhone(e.target.value.replace(/\D/g, ''))
-                    }
-                  />
-                </div>
-              </div>
-              <button
-                className="btn-primary flex items-center justify-center gap-2"
-                onClick={sendOtp}
-                disabled={busy}
-              >
-                <MessageCircle size={18} aria-hidden />
-                {busy ? 'Sending…' : 'Send code on WhatsApp'}
+              <button className="btn-primary" onClick={googleSignIn}>
+                Continue with Google
               </button>
               <div className="flex items-center gap-3">
                 <span className="h-px flex-1 bg-gray-200" />
                 <span className="text-xs text-gray-400">or</span>
                 <span className="h-px flex-1 bg-gray-200" />
               </div>
-              <button className="btn-ghost" onClick={googleSignIn}>
-                Continue with Google
-              </button>
+              {WHATSAPP_LOGIN_ENABLED ? (
+                <>
+                  <div>
+                    <label htmlFor="phone" className="label">
+                      Mobile number
+                    </label>
+                    <div className="flex gap-2">
+                      <span className="flex items-center rounded-md border border-gray-200 bg-gray-50 px-3 text-gray-600">
+                        +91
+                      </span>
+                      <input
+                        id="phone"
+                        type="tel"
+                        inputMode="numeric"
+                        autoComplete="tel-national"
+                        maxLength={10}
+                        className="input"
+                        placeholder="98765 43210"
+                        value={phone}
+                        onChange={(e) =>
+                          setPhone(e.target.value.replace(/\D/g, ''))
+                        }
+                      />
+                    </div>
+                  </div>
+                  <button
+                    className="btn-primary flex items-center justify-center gap-2"
+                    onClick={sendOtp}
+                    disabled={busy}
+                  >
+                    <MessageCircle size={18} aria-hidden />
+                    {busy ? 'Sending…' : 'Send code on WhatsApp'}
+                  </button>
+                </>
+              ) : (
+                <button
+                  className="btn-ghost flex items-center justify-center gap-2 opacity-60"
+                  disabled
+                >
+                  <MessageCircle size={18} aria-hidden />
+                  WhatsApp login — coming soon
+                </button>
+              )}
             </>
           ) : (
             <>
