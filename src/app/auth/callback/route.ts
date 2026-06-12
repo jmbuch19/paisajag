@@ -24,6 +24,13 @@ export async function GET(request: Request) {
     .eq('user_id', data.session.user.id)
     .maybeSingle()
 
+  if (profile) {
+    await supabase
+      .from('profiles')
+      .update({ last_login_at: new Date().toISOString() })
+      .eq('user_id', data.session.user.id)
+  }
+
   const destination = profile?.dna_complete
     ? '/dashboard?check_in=true'
     : '/onboarding'

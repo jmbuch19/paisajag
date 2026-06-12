@@ -1,5 +1,7 @@
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { PLATFORM_NAME } from '@/lib/constants'
+import { getSupabaseServer } from '@/lib/supabase/server'
 
 const ADMIN_LINKS = [
   { href: '/admin', label: 'Overview' },
@@ -12,12 +14,26 @@ const ADMIN_LINKS = [
 
 // Admin sees platform health only — never individual member
 // financial data (MEMORY.md privacy architecture).
-// TODO(backend): gate behind owner auth + service role data.
-export default function AdminLayout({
+// Gate: session email must be in ADMIN_EMAILS. Preview mode (no envs)
+// stays open so the design is browsable without a backend.
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const supabase = getSupabaseServer()
+  if (supabase) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    const admins = (process.env.ADMIN_EMAILS ?? '')
+      .split(',')
+      .map((e) => e.trim().toLowerCase())
+      .filter(Boolean)
+    if (!user || !user.email || !admins.includes(user.email.toLowerCase())) {
+      redirect('/dashboard')
+    }
+  }
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="border-b-[0.5px] border-gray-200 bg-white px-6 py-4">
