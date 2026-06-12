@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { TopBar } from '@/components/TopBar'
 import { DisclaimerBlock } from '@/components/DisclaimerBlock'
 import { sipCorpus, lumpsumCorpus } from '@/lib/simulate'
@@ -9,20 +9,26 @@ import {
   DEFAULT_CAGR,
   SIMULATION_ASSUMPTION_NOTE,
 } from '@/lib/constants'
-import { mockInvestments } from '@/lib/mock-data'
+import { useMemberData } from '@/lib/use-member-data'
 
 type Scenario = 'sip_change' | 'lumpsum'
 
-const currentMonthlySip = mockInvestments.reduce(
-  (sum, inv) => sum + (inv.monthlySip ?? 0),
-  0
-)
-
 export default function SimulatePage() {
+  const { loading, investments } = useMemberData()
+  // BEFORE state always comes from the member's real portfolio (SPEC.md)
+  const currentMonthlySip = investments.reduce(
+    (sum, inv) => sum + (inv.monthlySip ?? 0),
+    0,
+  )
   const [scenario, setScenario] = useState<Scenario>('sip_change')
-  const [newSip, setNewSip] = useState(currentMonthlySip + 5000)
+  const [newSip, setNewSip] = useState(5000)
   const [lumpsum, setLumpsum] = useState(100_000)
   const [years, setYears] = useState(10)
+
+  useEffect(() => {
+    if (!loading) setNewSip(currentMonthlySip + 5000)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading])
 
   // BEFORE state always comes from the current portfolio (SPEC.md)
   const before = sipCorpus(currentMonthlySip, years, DEFAULT_CAGR)

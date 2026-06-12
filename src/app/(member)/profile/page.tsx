@@ -1,10 +1,10 @@
+'use client'
+
 import Link from 'next/link'
 import { Settings, Pencil } from 'lucide-react'
 import { TopBar } from '@/components/TopBar'
 import { Tag } from '@/components/Tag'
-import { mockMember } from '@/lib/mock-data'
-
-export const metadata = { title: 'Profile — PaisaJag' }
+import { useMemberData } from '@/lib/use-member-data'
 
 const LIFE_STAGE_LABEL: Record<string, string> = {
   early_career: 'Early career',
@@ -13,8 +13,21 @@ const LIFE_STAGE_LABEL: Record<string, string> = {
   retired: 'Retired',
 }
 
+const RISK_LABEL: Record<string, string> = {
+  conservative: 'Conservative',
+  moderate: 'Moderate',
+  aggressive: 'Aggressive',
+}
+
 export default function ProfilePage() {
-  const member = mockMember
+  const { loading, member } = useMemberData()
+
+  const initials = member.fullName
+    .split(' ')
+    .map((part) => part[0])
+    .join('')
+
+  const contactLine = [member.phone, member.city].filter(Boolean).join(' · ')
 
   return (
     <>
@@ -25,18 +38,15 @@ export default function ProfilePage() {
             aria-hidden
             className="flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 text-xl font-medium text-amber-800"
           >
-            {member.fullName
-              .split(' ')
-              .map((part) => part[0])
-              .join('')}
+            {loading ? '…' : initials}
           </span>
           <div>
             <h1 className="text-lg font-medium text-gray-900">
-              {member.fullName}
+              {loading ? 'Loading…' : member.fullName}
             </h1>
-            <p className="text-sm text-gray-400">
-              {member.phone} · {member.city}
-            </p>
+            {contactLine && (
+              <p className="text-sm text-gray-400">{contactLine}</p>
+            )}
           </div>
         </section>
 
@@ -45,7 +55,7 @@ export default function ProfilePage() {
             <h2 className="text-xs font-medium uppercase tracking-wide text-gray-400">
               Your Financial DNA
             </h2>
-            {/* TODO(backend): edit flow updates profiles table */}
+            {/* Edit flow (updates profiles) arrives with Phase 2 */}
             <button
               className="flex items-center gap-1 text-sm font-medium text-amber-800"
               aria-label="Edit Financial DNA"
@@ -58,7 +68,7 @@ export default function ProfilePage() {
               <dt className="text-gray-600">Life stage</dt>
               <dd>
                 <Tag variant="info">
-                  {LIFE_STAGE_LABEL[member.lifeStage] ?? member.lifeStage}
+                  {LIFE_STAGE_LABEL[member.lifeStage] ?? (member.lifeStage || '—')}
                 </Tag>
               </dd>
             </div>
@@ -66,15 +76,13 @@ export default function ProfilePage() {
               <dt className="text-gray-600">Risk temperament</dt>
               <dd>
                 <Tag variant="neutral">
-                  {member.riskProfile === 'moderate'
-                    ? 'Moderate'
-                    : member.riskProfile}
+                  {RISK_LABEL[member.riskProfile] ?? (member.riskProfile || '—')}
                 </Tag>
               </dd>
             </div>
             <div className="flex justify-between">
               <dt className="text-gray-600">Age</dt>
-              <dd className="font-medium text-gray-900">{member.age}</dd>
+              <dd className="font-medium text-gray-900">{member.age ?? '—'}</dd>
             </div>
           </dl>
           <p className="mt-4 text-xs text-gray-400">

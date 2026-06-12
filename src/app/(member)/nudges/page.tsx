@@ -1,9 +1,9 @@
+'use client'
+
 import { Sunrise, Moon, Trophy, BellOff } from 'lucide-react'
 import { TopBar } from '@/components/TopBar'
 import { EmptyState } from '@/components/EmptyState'
-import { mockNudges } from '@/lib/mock-data'
-
-export const metadata = { title: 'Nudge History — PaisaJag' }
+import { useMemberData } from '@/lib/use-member-data'
 
 const NUDGE_META = {
   morning_brief: { icon: Sunrise, label: 'Morning brief' },
@@ -12,21 +12,27 @@ const NUDGE_META = {
 } as const
 
 export default function NudgesPage() {
-  const nudges = mockNudges
+  const { loading, nudges } = useMemberData()
 
   return (
     <>
       <TopBar title="Nudge History" showBack />
       <main className="mx-auto max-w-lg space-y-4 px-4 py-5">
-        {nudges.length === 0 ? (
+        {loading ? (
+          <section className="card py-10 text-center text-sm text-gray-400">
+            Loading…
+          </section>
+        ) : nudges.length === 0 ? (
           <EmptyState
             icon={BellOff}
-            message="Your morning briefs will appear here. First one arrives tomorrow at 6:30am."
+            message="Your morning briefs will appear here once WhatsApp nudges go live."
           />
         ) : (
           <ul className="space-y-3">
             {nudges.map((nudge) => {
-              const { icon: Icon, label } = NUDGE_META[nudge.nudgeType]
+              const meta = NUDGE_META[nudge.nudgeType]
+              if (!meta) return null
+              const { icon: Icon, label } = meta
               const delivered = new Date(nudge.deliveredAt)
               return (
                 <li key={nudge.id} className="card">
