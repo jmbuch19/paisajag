@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/nav-refresh",
+      "schedule": "30 0 * * *"
+    }
+  ]
+}

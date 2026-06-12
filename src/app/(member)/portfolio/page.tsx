@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { Plus, Wallet } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Plus, Wallet, Link2 } from 'lucide-react'
 import { TopBar } from '@/components/TopBar'
 import { HealthTag } from '@/components/Tag'
 import { Tag } from '@/components/Tag'
@@ -53,6 +53,11 @@ const EMPTY_FORM: FormState = {
   planType: 'unknown',
 }
 
+interface FundSuggestion {
+  schemeCode: number
+  schemeName: string
+}
+
 function AddInvestmentForm({
   onSaved,
   onCancel,
@@ -64,6 +69,8 @@ function AddInvestmentForm({
   const [form, setForm] = useState<FormState>(EMPTY_FORM)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [suggestions, setSuggestions] = useState<FundSuggestion[]>([])
+  const [linked, setLinked] = useState<FundSuggestion | null>(null)
 
   const valid =
     form.fundName.trim().length > 0 && Number(form.currentValue) > 0
@@ -71,6 +78,26 @@ function AddInvestmentForm({
   function set<K extends keyof FormState>(key: K, value: string) {
     setForm((f) => ({ ...f, [key]: value }))
   }
+
+  // Live fund search (mfapi.in via our proxy) — linking a scheme enables
+  // daily NAV auto-updates for this investment.
+  useEffect(() => {
+    const q = form.fundName.trim()
+    if (linked || q.length < 4) {
+      setSuggestions([])
+      return
+    }
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/funds/search?q=${encodeURIComponent(q)}`)
+        if (res.ok) setSuggestions(await res.json())
+      } catch {
+        setSuggestions([])
+      }
+    }, 350)
+    return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.fundName, linked])
 
   async function save() {
     setError(null)
@@ -89,15 +116,39 @@ function AddInvestmentForm({
     }
     const sip = Number(form.monthlySip)
     const invested = Number(form.investedAmount)
+    const currentValue = Number(form.currentValue)
+
+    // If linked to a live scheme, derive units from today's NAV so the
+    // daily cron can keep current_value fresh.
+    let navFields = {}
+    if (linked) {
+      try {
+        const res = await fetch(`/api/funds/${linked.schemeCode}`)
+        if (res.ok) {
+          const { nav, fundHouse } = await res.json()
+          navFields = {
+            scheme_code: String(linked.schemeCode),
+            amc_name: fundHouse ?? null,
+            units: Math.round((currentValue / nav) * 10000) / 10000,
+            last_nav: nav,
+            nav_updated_at: new Date().toISOString(),
+          }
+        }
+      } catch {
+        // save without the link — member can re-add later
+      }
+    }
+
     const { error } = await supabase.from('investments').insert({
       user_id: user.id,
       fund_name: form.fundName.trim(),
       fund_type: form.fundType,
       investment_mode: sip > 0 ? (invested > 0 ? 'both' : 'sip') : 'lumpsum',
       invested_amount: invested > 0 ? invested : null,
-      current_value: Number(form.currentValue),
+      current_value: currentValue,
       monthly_sip_amount: sip > 0 ? sip : null,
       plan_type: form.planType,
+      ...navFields,
     })
     setBusy(false)
     if (error) {
@@ -110,7 +161,7 @@ function AddInvestmentForm({
   return (
     <section className="card space-y-4">
       <h2 className="font-medium text-gray-900">Add an investment</h2>
-      <div>
+      <div className="relative">
         <label htmlFor="fund-name" className="label">
           Name (fund, scheme or asset)
         </label>
@@ -120,8 +171,42 @@ function AddInvestmentForm({
           className="input"
           placeholder="e.g. HDFC Flexi Cap Fund"
           value={form.fundName}
-          onChange={(e) => set('fundName', e.target.value)}
+          autoComplete="off"
+          onChange={(e) => {
+            set('fundName', e.target.value)
+            setLinked(null)
+          }}
         />
+        {suggestions.length > 0 && (
+          <ul className="absolute z-10 mt-1 max-h-56 w-full overflow-y-auto rounded-md border border-gray-200 bg-white shadow-lg">
+            {suggestions.map((s) => (
+              <li key={s.schemeCode}>
+                <button
+                  type="button"
+                  className="w-full px-3 py-2 text-left text-sm text-gray-900 hover:bg-amber-50"
+                  onClick={() => {
+                    set('fundName', s.schemeName)
+                    setLinked(s)
+                    setSuggestions([])
+                  }}
+                >
+                  {s.schemeName}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+        {linked ? (
+          <p className="mt-1.5 flex items-center gap-1 text-xs text-teal-600">
+            <Link2 size={12} aria-hidden />
+            Linked — value updates automatically with daily NAV
+          </p>
+        ) : (
+          <p className="mt-1.5 text-xs text-gray-400">
+            Pick a suggestion to enable automatic daily NAV updates (mutual
+            funds only) — or just type any asset name.
+          </p>
+        )}
       </div>
       <div>
         <label htmlFor="fund-type" className="label">
