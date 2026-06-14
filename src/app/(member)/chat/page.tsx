@@ -5,6 +5,8 @@ import { Send } from 'lucide-react'
 import { TopBar } from '@/components/TopBar'
 import { STANDARD_DISCLAIMER } from '@/lib/constants'
 import { getSupabaseBrowser } from '@/lib/supabase/client'
+import { useMemberData } from '@/lib/use-member-data'
+import { chatOpener, chatChips } from '@/lib/chat-opener'
 
 interface Message {
   role: 'user' | 'assistant'
@@ -13,11 +15,8 @@ interface Message {
 
 const DAILY_LIMIT = 5
 
-const WELCOME: Message = {
-  role: 'assistant',
-  content:
-    'Hello! I’m here whenever you want to talk through your money — what you own, what the news means for you, or what a decision might look like before you make it. What’s on your mind?',
-}
+const GENERIC_OPENER =
+  'Hello! I’m here whenever you want to talk through your money — what you own, what the news means for you, or what a decision might look like before you make it. What’s on your mind?'
 
 // Start of the current IST day, as a UTC instant (mirrors the API route).
 function istDayStartUtc(): Date {
@@ -30,7 +29,10 @@ function istDayStartUtc(): Date {
 }
 
 export default function ChatPage() {
-  const [messages, setMessages] = useState<Message[]>([WELCOME])
+  const memberData = useMemberData()
+  // Conversation turns only (history + live). The proactive opener is rendered
+  // separately as the first bubble and is never stored or counted.
+  const [messages, setMessages] = useState<Message[]>([])
   const [remaining, setRemaining] = useState<number | null>(null)
   const [input, setInput] = useState('')
   const [busy, setBusy] = useState(false)
@@ -50,15 +52,21 @@ export default function ChatPage() {
       .then(({ data }) => {
         const history = (data?.messages ?? []) as Message[]
         if (history.length > 0) {
-          setMessages([WELCOME, ...history.map((m) => ({ role: m.role, content: m.content }))])
+          setMessages(history.map((m) => ({ role: m.role, content: m.content })))
         }
         setRemaining(DAILY_LIMIT - history.filter((m) => m.role === 'user').length)
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  async function send() {
-    const text = input.trim()
+  const opener: Message = {
+    role: 'assistant',
+    content: memberData.loading ? GENERIC_OPENER : chatOpener(memberData),
+  }
+  const chips = memberData.loading ? [] : chatChips(memberData)
+
+  async function send(textArg?: string) {
+    const text = (textArg ?? input).trim()
     if (!text || busy) return
     setInput('')
     setMessages((m) => [...m, { role: 'user', content: text }])
@@ -95,7 +103,7 @@ export default function ChatPage() {
       <TopBar title="Chat" showBack />
       <main className="mx-auto flex max-w-lg flex-col px-4 py-5">
         <div className="flex-1 space-y-3">
-          {messages.map((m, i) => (
+          {[opener, ...messages].map((m, i) => (
             <div
               key={i}
               className={`max-w-[85%] whitespace-pre-line rounded-lg px-4 py-3 text-sm leading-relaxed ${
@@ -114,6 +122,21 @@ export default function ChatPage() {
           )}
           <div ref={bottomRef} />
         </div>
+
+        {/* Proactive suggestion chips — tapping sends a real question (counts) */}
+        {!busy && !exhausted && chips.length > 0 && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {chips.map((c) => (
+              <button
+                key={c}
+                onClick={() => send(c)}
+                className="rounded-full border border-amber-300 bg-white px-3 py-1.5 text-xs font-medium text-amber-800 hover:border-amber-500"
+              >
+                {c}
+              </button>
+            ))}
+          </div>
+        )}
 
         <p className="disclaimer">{STANDARD_DISCLAIMER}</p>
 
@@ -140,7 +163,7 @@ export default function ChatPage() {
             aria-label="Message"
           />
           <button
-            onClick={send}
+            onClick={() => send()}
             disabled={busy || !input.trim() || exhausted}
             aria-label="Send message"
             className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-amber-800 text-white disabled:opacity-50"
