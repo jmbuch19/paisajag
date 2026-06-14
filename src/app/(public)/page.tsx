@@ -150,7 +150,24 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Section 6 — Footer */}
+      {/* Section 6 — About Us */}
+      <section className="bg-white px-6 py-12">
+        <div className="mx-auto max-w-lg space-y-4 text-center">
+          <h2 className="text-xl font-medium text-gray-900">
+            Built to make you calmer about money
+          </h2>
+          <p className="text-gray-600">
+            PaisaJag is a personal finance awareness platform for Indian
+            families — not a trading app, not an advisor. No buy buttons, no
+            urgency. Just one calm picture of what you own and what it means.
+          </p>
+          <Link href="/about" className="btn-ghost mx-auto max-w-xs">
+            Read our story
+          </Link>
+        </div>
+      </section>
+
+      {/* Section 7 — Footer */}
       <SiteFooter />
     </main>
   )
