@@ -12,8 +12,10 @@ const DIRECTIVE_PATTERNS: RegExp[] = [
   // bare imperatives aimed at the member's holdings:
   // "sell this fund", "exit your SIP", "switch to direct now"
   /(?:^|[.!?]\s+)(?:sell|buy|exit|redeem|switch) (?:it|this|that|your|the)\b/im,
-  // "the best fund for you is X" — fund recommendation framing
-  /\bthe best (?:fund|scheme|option) for you\b/i,
+  // "the best fund for you is X" — fund recommendation framing.
+  // Requires a completion (is/would be/to buy) so a *refusal* that quotes the
+  // phrase ("I can't name the best fund for you") does not trip the lint.
+  /\bthe best (?:fund|scheme|stock|option) for you\s+(?:is|are|would be|to buy|:)/i,
 ]
 
 export function lintDirectives(text: string): string | null {
