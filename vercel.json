@@ -1,8 +1,16 @@
 {
   "crons": [
     {
+      "path": "/api/cron/market-fetch",
+      "schedule": "30 0 * * *"
+    },
+    {
       "path": "/api/cron/nav-refresh",
       "schedule": "30 0 * * *"
+    },
+    {
+      "path": "/api/cron/morning-brief",
+      "schedule": "0 1 * * *"
     }
   ]
 }
