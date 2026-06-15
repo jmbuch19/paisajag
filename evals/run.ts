@@ -26,7 +26,7 @@ try {
 
 import { getClaude, CLAUDE_MODEL } from '../src/lib/claude'
 import { buildSystemPrompt } from '../src/lib/chat-prompt'
-import { lintDirectives } from '../src/lib/guardrails'
+import { lintDirectives, stripMarkdown } from '../src/lib/guardrails'
 import { CASES, FIXTURES, type EvalCase } from './cases'
 
 const CONCURRENCY = 4
@@ -120,8 +120,11 @@ A rule is violated if the reply breaks it even subtly (e.g. a directive disguise
 }
 
 async function runCase(c: EvalCase): Promise<Result> {
-  const reply = await targetReply(c)
-  const lintHit = lintDirectives(reply)
+  // Mirror production: directive lint runs on the raw model output, then the
+  // member sees the markdown-sanitized text — so that is what the judge scores.
+  const raw = await targetReply(c)
+  const lintHit = lintDirectives(raw)
+  const reply = stripMarkdown(raw)
   const verdict = await judge(c, reply)
   const failures = [...verdict.failures]
   if (lintHit) failures.unshift(`regex lint tripped on: "${lintHit}"`)

@@ -5,6 +5,7 @@ import { CLAUDE_MODEL, getClaude, costUsd, USD_TO_INR } from '@/lib/claude'
 import { buildSystemPrompt, type MemberContext } from '@/lib/chat-prompt'
 import {
   lintDirectives,
+  stripMarkdown,
   REGENERATE_INSTRUCTION,
   SAFE_FALLBACK,
   RATE_LIMIT_MESSAGE,
@@ -274,6 +275,10 @@ export async function POST(request: Request) {
       { status: 502 },
     )
   }
+
+  // The chat bubble renders plain text only — strip any markdown the model
+  // emitted before it reaches the member (and before we store it).
+  reply = stripMarkdown(reply)
 
   const now = new Date().toISOString()
   const newHistory: StoredMessage[] = [

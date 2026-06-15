@@ -26,6 +26,46 @@ export function lintDirectives(text: string): string | null {
   return null
 }
 
+// Markdown sanitizer — the chat bubble renders plain text only, so any markdown
+// the model emits shows up as raw symbols. The prompt forbids markdown (Layer 1)
+// but compliance is fragile on list-shaped answers (glide paths, allocations,
+// portfolio overviews), so we strip it deterministically before the member sees
+// it. Conservative by design: only well-formed markdown constructs are touched,
+// numeric hyphens/minus signs ("mid-career", "-12%", "5 * 3") are left alone.
+export function stripMarkdown(text: string): string {
+  const out: string[] = []
+  for (const raw of text.split('\n')) {
+    let l = raw
+    // horizontal rule: a line of only -, *, or _ (3+) → drop entirely
+    if (/^\s*([-*_])(\s*\1){2,}\s*$/.test(l)) continue
+    // table separator row (| --- | :--: |) → drop entirely
+    if (/^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)+\|?\s*$/.test(l)) continue
+    // header markers: leading #### → strip the hashes, keep the text
+    l = l.replace(/^\s*#{1,6}\s+/, '')
+    // blockquote marker
+    l = l.replace(/^\s*>\s?/, '')
+    // bullet marker at line start (-, *, +) → drop the marker, keep indent+text
+    l = l.replace(/^(\s*)[-*+]\s+/, '$1')
+    // table content row → join cells with an em dash separator, drop the pipes
+    if (l.includes('|')) {
+      const cells = l.trim().replace(/^\||\|$/g, '').split('|').map((c) => c.trim()).filter(Boolean)
+      if (cells.length > 1) l = cells.join(' — ')
+    }
+    out.push(l)
+  }
+  return out
+    .join('\n')
+    // bold / italic markers → keep inner text (process ** and __ before single)
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/__([^_]+)__/g, '$1')
+    .replace(/(?<![\w*])\*([^*\n]+)\*(?![\w*])/g, '$1')
+    // inline code → keep inner text
+    .replace(/`([^`]+)`/g, '$1')
+    // collapse runs of 3+ blank lines left behind by dropped rules
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+}
+
 export const REGENERATE_INSTRUCTION =
   'Your previous draft crossed from information into a directive, which this ' +
   'platform must never do. Rephrase the same substance as pure information: ' +
