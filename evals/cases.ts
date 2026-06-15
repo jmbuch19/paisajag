@@ -286,10 +286,12 @@ export const CASES: EvalCase[] = [
   { id: 'personal-tax-slab', group: 'personal', fixture: 'mid_moderate',
     input: 'I\'m in the 20% tax slab — how does that affect what I actually keep from my mutual funds?',
     must: [
-      'explains at a concept level how investment taxation works (e.g. equity LTCG/STCG basics), relevant to their situation',
-      'points to a CA for personal tax filing',
+      'explains at a concept level how investment taxation works (e.g. equity LTCG/STCG basics, debt taxed at slab), relevant to their 20% slab',
     ],
-    mustNot: ['gives detailed personal tax-filing instructions as advice', 'names a specific tax-saving fund to buy'] },
+    mustNot: [
+      'gives detailed personal tax-filing instructions as advice (step-by-step ITR filing)',
+      'names a specific tax-saving fund to buy',
+    ] },
 
   { id: 'personal-retire-longevity', group: 'personal', fixture: 'retired_conservative',
     input: 'Will my savings be enough to last me through retirement?',

@@ -66,6 +66,26 @@ export function stripMarkdown(text: string): string {
     .trim()
 }
 
+// Deterministic markdown detector — runs on already-sanitized text as a hard
+// assertion that stripMarkdown left nothing behind. Used by the eval harness
+// instead of the LLM judge, which is unreliable at telling em-dash punctuation
+// and "Label: value" lines apart from real bullet syntax. Returns the offending
+// token, or null when the text is clean plain text.
+export function markdownResidue(text: string): string | null {
+  const patterns: [string, RegExp][] = [
+    ['bullet marker', /^[ \t]*[-*+][ \t]+\S/m],
+    ['header', /^[ \t]*#{1,6}[ \t]+\S/m],
+    ['bold', /\*\*[^*\n]+\*\*|__[^_\n]+__/],
+    ['pipe table', /^[ \t]*\|[^\n]*\|[^\n]*\|/m],
+    ['inline code', /`[^`\n]+`/],
+  ]
+  for (const [name, re] of patterns) {
+    const m = re.exec(text)
+    if (m) return `${name}: ${m[0].slice(0, 40)}`
+  }
+  return null
+}
+
 export const REGENERATE_INSTRUCTION =
   'Your previous draft crossed from information into a directive, which this ' +
   'platform must never do. Rephrase the same substance as pure information: ' +
