@@ -3,8 +3,17 @@
 @tailwind utilities;
 
 @layer base {
+  /* html carries the background too: on mobile the overscroll/rubber-band area
+     and the address-bar collapse gap paint the html element, not body — without
+     this they show bare white below the content. overscroll-behavior-y stops the
+     vertical bounce from chaining past the page. */
+  html {
+    @apply bg-amber-50;
+    overscroll-behavior-y: none;
+  }
+
   body {
-    @apply bg-amber-50 text-gray-900 font-sans text-base antialiased;
+    @apply min-h-screen bg-amber-50 text-gray-900 font-sans text-base antialiased;
   }
 }
 
