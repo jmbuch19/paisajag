@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { PublicPageShell } from '@/components/PublicPageShell'
+import { CONTACT_EMAIL } from '@/lib/constants'
 
 export const metadata: Metadata = { title: 'About — PaisaJag' }
 
@@ -40,6 +41,18 @@ export default function AboutPage() {
         portfolio. A family head can see the family aggregate only with each
         member’s explicit permission — and every access is logged. Even the
         platform owner cannot see your individual numbers.
+      </p>
+
+      <h2 className="text-lg font-medium text-gray-900">Get in touch</h2>
+      <p>
+        Questions, feedback or just want to say hello? Write to us at{' '}
+        <a
+          href={`mailto:${CONTACT_EMAIL}`}
+          className="text-amber-800 underline"
+        >
+          {CONTACT_EMAIL}
+        </a>
+        . A real person reads every message.
       </p>
     </PublicPageShell>
   )

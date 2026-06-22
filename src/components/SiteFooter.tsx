@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { KabirQuote } from './KabirQuote'
-import { SHORT_DISCLAIMER } from '@/lib/constants'
+import { CONTACT_EMAIL, SHORT_DISCLAIMER } from '@/lib/constants'
 
 const FOOTER_LINKS = [
   { href: '/about', label: 'About' },
@@ -8,6 +8,7 @@ const FOOTER_LINKS = [
   { href: '/terms', label: 'Terms' },
   { href: '/disclaimer', label: 'Disclaimer' },
   { href: '/data-deletion', label: 'Data Deletion' },
+  { href: `mailto:${CONTACT_EMAIL}`, label: 'Contact' },
 ]
 
 export function SiteFooter() {

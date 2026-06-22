@@ -2,6 +2,10 @@ export const PLATFORM_NAME = 'PaisaJag'
 export const TAGLINE = 'Jag Paisa. Bhag Paisa.'
 export const DOMAIN = 'paisajag.in'
 
+// Official contact mailbox — send + receive. Shown to users for general
+// queries (footer, About). Privacy/deletion uses privacy@ separately.
+export const CONTACT_EMAIL = 'info@paisajag.in'
+
 // Founding quote — landing hero and footer. Never remove (DESIGN.md).
 export const KABIR_DOHA_HINDI = 'जो सोवत है सो खोवत है\nजो जागत है सोई पावत है'
 export const KABIR_DOHA_ATTRIBUTION = '— Kabir'
